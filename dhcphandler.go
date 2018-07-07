@@ -83,7 +83,7 @@ func (h *DHCPHandler) ServeDHCP(p dhcp.Packet, msgType dhcp.MessageType, options
 			reqIP = net.IP(p.CIAddr())
 		}
 		// If This is one of our victims
-		if reqIP.Equal(*ip) {
+		if ip != nil && reqIP.Equal(*ip) {
 			return dhcp.ReplyPacket(p, dhcp.ACK, h.ip, reqIP, h.leaseDuration,
 				h.options.SelectOrderOrAll(options[dhcp.OptionParameterRequestList]))
 		}
