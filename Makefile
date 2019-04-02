@@ -31,7 +31,7 @@ test-watch: scoringengine
 
 .PHONY: clean
 clean:
-	rm scoringengine
+	rm -f scoringengine
 
 watch:
 	find *.go Makefile | entr make

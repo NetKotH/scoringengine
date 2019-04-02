@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net"
 	"os"
@@ -82,28 +83,35 @@ func refreshVMs() {
 			continue
 		}
 		if victims[vmRaw.MAC] == nil {
-			//log.Printf("Adding victim: %#v\n", vmRaw)
+			log.Printf("Adding victim: %#v\n", vmRaw)
 			// Pick a usable ip
 			for flag := false; flag == false; {
+				log.Printf("Now trying ip: %d\n", freeIP[3])
 				flag = true
 				// First check the ARP table.
 				for i, m := range arp.Table() {
 					if i == freeIP.String() && strings.ToLower(m) != strings.ToLower(vmRaw.MAC) {
+						fmt.Println("Found ip in arp table")
 						freeIP[3]++
+						flag = true
 						break
 					}
 				}
 				// Next, check any other known victims
 				for _, v := range victims {
 					if v.IP.Equal(freeIP) {
+						fmt.Println("Found ip in known victim lists")
 						freeIP[3]++
+						flag = true
 						break
 					}
 				}
 			}
+			vmIP := make(net.IP, len(freeIP))
+			copy(vmIP, freeIP)
 			victims[vmRaw.MAC] = &victim{
 				Controller: "<none>",
-				IP:         freeIP,
+				IP:         vmIP,
 				LastSeen:   time.Now(),
 				Mac:        vmRaw.MAC,
 				Name:       vmRaw.Name,

@@ -165,14 +165,15 @@ func main() {
 	}
 
 	scoreinterval, err = time.ParseDuration(viper.GetString("scoreinterval"))
+	leases := make(map[string]lease)
 	dhcphandler := &DHCPHandler{
 		ip:            bridgeIP,
 		leaseDuration: scoreinterval,
 		start:         bridgeIP,
-		leaseRange:    50,
-		leases:        make(map[int]lease, 10),
+		leaseRange:    50, // TODO figure out how to make this a touch more dynamic.
+		leases:        leases,
 		options: dhcp.Options{
-			dhcp.OptionSubnetMask:       []byte{255, 255, 240, 0},
+			dhcp.OptionSubnetMask:       []byte{255, 255, 255, 0},
 			dhcp.OptionDomainNameServer: []byte(bridgeIP), // Presuming Server is also your DNS server
 		},
 	}
@@ -232,6 +233,7 @@ func main() {
 	logger.Println("Starting victim checks")
 	// Start target system checks in the foreground
 	for {
+		logger.Println("top of check loop")
 		refreshVMs()
 		refreshContainers()
 		checkVictims()

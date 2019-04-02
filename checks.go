@@ -41,6 +41,7 @@ func checkVictims() {
 		logger := log.New(os.Stderr, "["+victims[i].Name+"] ", log.LstdFlags)
 		if victims[i].State == StateCrashed {
 			// Start the VM if it has crashed
+			victims[i].State = StateOffline
 			victims[i].VM.Start()
 			continue
 		}
