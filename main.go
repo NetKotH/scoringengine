@@ -178,6 +178,7 @@ func main() {
 		},
 	}
 
+	//var done chan bool
 	// Setup dhcp server
 	go func() {
 		logger.Printf("Starting DHCP server on %s\n", viper.GetString("bridge"))
@@ -189,12 +190,14 @@ func main() {
 			// TODO make sure this wins the race against the other servers
 			logger.Fatalf("setcap cap_net_bind_service,cap_net_raw+ep %s\n", os.Args[0])
 		}
+		//done <- true
 		err = dhcp.Serve(connection, dhcphandler)
 		if err != nil {
 			logger.Fatalf("Error with DHCP Server: %s\n", err)
 		}
 	}()
 
+	//<-done
 	// Setup http server
 	go func() {
 		logger.Println("Starting http service")

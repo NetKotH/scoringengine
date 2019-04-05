@@ -10,7 +10,7 @@ import (
 func refreshContainers() {
 	client, err := docker.NewClientFromEnv()
 	if err != nil {
-		log.Printf("Unable to refresh containers: %s\n", err)
+		//log.Printf("Unable to refresh containers: %s\n", err)
 		return
 	}
 	victimContainers, err := client.ListContainers(docker.ListContainersOptions{
