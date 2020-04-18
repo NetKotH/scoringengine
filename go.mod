@@ -13,8 +13,10 @@ require (
 	github.com/lestrrat-go/strftime v0.0.0-20180821113735-8b31f9c59b0f // indirect
 	github.com/miekg/dns v1.1.8
 	github.com/mostlygeek/arp v0.0.0-20170424181311-541a2129847a
-	github.com/omeid/go-resources v0.0.0-20190324090249-46f4269d8abd
+	github.com/omeid/go-resources v0.0.0-20200113210624-eb442c910d63
 	github.com/spf13/viper v1.3.2
 	github.com/tebeka/strftime v0.0.0-20140926081919-3f9c7761e312 // indirect
 	golang.org/x/net v0.0.0-20190328230028-74de082e2cca // indirect
 )
+
+go 1.13
