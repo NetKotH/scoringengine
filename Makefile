@@ -1,6 +1,7 @@
 CERT_JWT ?= $(shell cat jwt.key)
 
 scoringengine: *.go
+	go generate -v
 	go build -v -o engine
 	sudo setcap cap_net_bind_service,cap_net_raw+ep engine
 	mv engine scoringengine
@@ -14,11 +15,8 @@ docker:
 	docker rm -vf scoringengine
 	upx -9 scoringengine
 
-cert.crt cert.key:
-	traefik-cert getcert -u certs.sprinkle.cloud -d scoreboard.netkoth.org -j "${CERT_JWT}" -c cert.crt -k cert.key
-
 package: clean
-	go generate
+	go generate -v
 	go build -v -i -tags=embed
 
 test: scoringengine

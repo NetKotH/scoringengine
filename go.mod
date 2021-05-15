@@ -3,6 +3,8 @@ module github.com/netkoth/scoringengine
 require (
 	github.com/BurntSushi/toml v0.3.1 // indirect
 	github.com/brimstone/go-vboxmanage v0.0.0-20180623141501-c9678a4c4bf7
+	github.com/brimstone/traefik-cert v0.0.0-20190527220558-8012afa69771 // indirect
+	github.com/dave/jennifer v1.4.1
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a // indirect
 	github.com/fastly/go-utils v0.0.0-20180712184237-d95a45783239 // indirect
 	github.com/fsouza/go-dockerclient v1.3.6
