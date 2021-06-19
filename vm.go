@@ -92,6 +92,12 @@ func refreshVMs() {
 				log.Println("Error parsing netkoth.nic value")
 				continue
 			}
+			if nicID == 0 {
+				nicID = 1
+			}
+		}
+		if len(vmRaw.MAC) == 0 {
+			continue
 		}
 		mac := vmRaw.MAC[nicID-1]
 
