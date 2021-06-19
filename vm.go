@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -16,21 +17,27 @@ import (
 func checkVMConfig(vm victim) {
 	logger := log.New(os.Stderr, "["+vm.Name+"] ", log.LstdFlags)
 	var err error
+	var ok bool
 	bridgeAdapter := viper.GetString("bridge")
 	dirty := false
 	// make Fresh snapshots of any VMs missing it
-	if vm.VM.Nic != "bridged" {
+	var vmMode string
+	if vmMode, ok = vm.VM.Meta["netkoth.mode"]; !ok {
+		vmMode = "bridged"
+
+	}
+	if vmMode != "ignore" && vm.VM.Nic != vmMode {
 		logger.Println("Modifying networking to bridged")
 		// Restore to snapshot fresh
 		vm.VM.RestoreSnapshot("Fresh")
-		err = vm.VM.Modify("nic1", "bridged")
+		err = vm.VM.Modify("nic1", "bridged") // TODO set this to vmNic
 		if err != nil {
 			logger.Println("Unable to set network to bridged. Shutdown the VM if it's on.")
 			return
 		}
 		dirty = true
 	}
-	if vm.VM.Bridge != bridgeAdapter {
+	if vmMode != "ignore" && vm.VM.Bridge != bridgeAdapter {
 		logger.Println("Modifying bridged adapter to", bridgeAdapter)
 		// Restore to snapshot fresh
 		vm.VM.RestoreSnapshot("Fresh")
@@ -50,7 +57,6 @@ func checkVMConfig(vm victim) {
 		vm.VM.MakeSnapshot("Fresh", "Fresh VM")
 	}
 	if vm.VM.Power == "off" {
-		// FIXME restore to snapshot fresh first, then start it?
 		logger.Println("Starting VM")
 		vm.VM.RestoreSnapshot("Fresh")
 		vm.VM.Start()
@@ -78,54 +84,68 @@ func refreshVMs() {
 	copy(freeIP, bridgeIP)
 	freeIP[3]++
 	for _, vmRaw := range vmsRaw {
+		var nicID int64 = 1
+		if nic, ok := vmRaw.Meta["netkoth.nic"]; ok {
+			var err error
+			nicID, err = strconv.ParseInt(nic, 10, 10)
+			if err != nil {
+				log.Println("Error parsing netkoth.nic value")
+				continue
+			}
+		}
+		mac := vmRaw.MAC[nicID-1]
 
 		if needGroup && vmRaw.Group != "NetKotH" {
 			continue
 		}
-		if victims[vmRaw.MAC] == nil {
+		if victims[mac] == nil {
 			log.Printf("Adding victim: %#v\n", vmRaw)
-			// Pick a usable ip
-			for flag := false; flag == false; {
-				log.Printf("Now trying ip: %d\n", freeIP[3])
-				flag = true
-				// First check the ARP table.
-				for i, m := range arp.Table() {
-					if i == freeIP.String() && strings.ToLower(m) != strings.ToLower(vmRaw.MAC) {
-						fmt.Println("Found ip in arp table")
-						freeIP[3]++
-						flag = true
-						break
+			if staticIP, ok := vmRaw.Meta["ip"]; ok {
+				freeIP = net.ParseIP(staticIP)
+			} else {
+				// Pick a usable ip
+				for flag := false; flag == false; {
+					log.Printf("Now trying ip: %d\n", freeIP[3])
+					flag = true
+					// First check the ARP table.
+					for i, m := range arp.Table() {
+						if i == freeIP.String() && strings.ToLower(m) != strings.ToLower(mac) {
+							fmt.Println("Found ip in arp table")
+							freeIP[3]++
+							flag = true
+							break
+						}
 					}
-				}
-				// Next, check any other known victims
-				for _, v := range victims {
-					if v.IP.Equal(freeIP) {
-						fmt.Println("Found ip in known victim lists")
-						freeIP[3]++
-						flag = true
-						break
+					// Next, check any other known victims
+					for _, v := range victims {
+						if v.IP.Equal(freeIP) {
+							fmt.Println("Found ip in known victim lists")
+							freeIP[3]++
+							flag = true
+							break
+						}
 					}
 				}
 			}
 			vmIP := make(net.IP, len(freeIP))
 			copy(vmIP, freeIP)
-			victims[vmRaw.MAC] = &victim{
+			victims[mac] = &victim{
 				Controller: "<none>",
 				IP:         vmIP,
 				LastSeen:   time.Now(),
-				Mac:        vmRaw.MAC,
+				Mac:        mac,
 				Name:       vmRaw.Name,
 				State:      StateOffline,
 				Type:       "VM",
 			}
 		}
-		victims[vmRaw.MAC].VM = vmRaw
+		victims[mac].VM = vmRaw
 		/*
 			if vmRaw.Power == "on" {
 				victims[vmRaw.MAC].State = StateRunning
 			}
 		*/
-		checkVMConfig(*victims[vmRaw.MAC])
+		checkVMConfig(*victims[mac])
 	}
 	// TODO remove VMs that aren't visited
 }

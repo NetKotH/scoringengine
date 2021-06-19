@@ -7,6 +7,8 @@ github.com/Microsoft/go-winio v0.4.11/go.mod h1:VhR8bwka0BXejwEJY73c50VrPtXAaKcy
 github.com/armon/consul-api v0.0.0-20180202201655-eb2c6b5be1b6/go.mod h1:grANhF5doyWs3UAsr3K4I6qtAmlQcZDesFNEHPZAzj8=
 github.com/brimstone/go-vboxmanage v0.0.0-20180623141501-c9678a4c4bf7 h1:EzBi+wChpGEzZnOCuxfexFrOzBQ0jw0Kowa//1LquUY=
 github.com/brimstone/go-vboxmanage v0.0.0-20180623141501-c9678a4c4bf7/go.mod h1:9XSb7w3NcyNSR/2fkk5j00EsGyDB1/uoua2MqyXLdHU=
+github.com/brimstone/go-vboxmanage v0.0.0-20210619180312-c9c7ecccaa7c h1:6SxSJ2kus6/jK2TDVGG1wKaFrXRipeEbenZMpuVSSb8=
+github.com/brimstone/go-vboxmanage v0.0.0-20210619180312-c9c7ecccaa7c/go.mod h1:3OXEY3ObfGT/uou5v397CCjCctHh+zfI5NtTEMc4t6Y=
 github.com/brimstone/jwt v0.0.0-20180624143910-4b2823fc8c64/go.mod h1:rV9ubc5jWXbz+3RTjOx2zWPf7JGIQAINemNA44jTwl4=
 github.com/brimstone/logger v0.0.0-20190113142256-ae017ea57c53 h1:H7raghV3FcIG8IaqXR8V8su6VdFQ6LUza2G7UJs/QUM=
 github.com/brimstone/logger v0.0.0-20190113142256-ae017ea57c53/go.mod h1:BtZTXxUd6K4pUX5+PLOPqoz0RB31v1hb6himfFmvFM0=
@@ -19,6 +21,7 @@ github.com/coreos/go-etcd v2.0.0+incompatible/go.mod h1:Jez6KQU2B/sWsbdaef3ED8Nz
 github.com/coreos/go-semver v0.2.0/go.mod h1:nnelYz7RCh+5ahJtPPxZlU+153eP4D4r3EedlOD2RNk=
 github.com/dave/jennifer v1.4.1 h1:XyqG6cn5RQsTj3qlWQTKlRGAyrTcsk1kUmWdZBzRjDw=
 github.com/dave/jennifer v1.4.1/go.mod h1:7jEdnm+qBcxl8PC0zyp7vxcpSRnzXSt9r39tpTVGlwA=
+github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/docker/docker v0.7.3-0.20190212235812-0111ee70874a h1:r64ncoybKAgtiM9jIPurN/P+9qc1hIF78FYWe6KD7Aw=
 github.com/docker/docker v0.7.3-0.20190212235812-0111ee70874a/go.mod h1:eEKB0N0r5NX/I1kEveEz05bcu8tLC/8azJZsviup8Sk=
@@ -47,6 +50,7 @@ github.com/ijc/Gotty v0.0.0-20170406111628-a8b993ba6abd h1:anPrsicrIi2ColgWTVPk+
 github.com/ijc/Gotty v0.0.0-20170406111628-a8b993ba6abd/go.mod h1:3LVOLeyx9XVvwPgrt2be44XgSqndprz1G18rSk8KD84=
 github.com/jehiah/go-strftime v0.0.0-20171201141054-1d33003b3869 h1:IPJ3dvxmJ4uczJe5YQdrYB16oTJlGSC/OyZDqUk9xX4=
 github.com/jehiah/go-strftime v0.0.0-20171201141054-1d33003b3869/go.mod h1:cJ6Cj7dQo+O6GJNiMx+Pa94qKj+TG8ONdKHgMNIyyag=
+github.com/konsorten/go-windows-terminal-sequences v1.0.1 h1:mweAR1A6xJ3oS2pRaGiHgQ4OO8tzTaLawm8vnODuwDk=
 github.com/konsorten/go-windows-terminal-sequences v1.0.1/go.mod h1:T0+1ngSBFLxvqU3pZ+m/2kptfBszLMUkC4ZK/EgS/cQ=
 github.com/krolaw/dhcp4 v0.0.0-20180925202202-7cead472c414 h1:6wnYc2S/lVM7BvR32BM74ph7bPgqMztWopMYKgVyEho=
 github.com/krolaw/dhcp4 v0.0.0-20180925202202-7cead472c414/go.mod h1:0AqAH3ZogsCrvrtUpvc6EtVKbc3w6xwZhkvGLuqyi3o=
@@ -65,10 +69,8 @@ github.com/mitchellh/mapstructure v1.1.2 h1:fmNYVwqnSfB9mZU6OS2O6GsXM+wcskZDuKQz
 github.com/mitchellh/mapstructure v1.1.2/go.mod h1:FVVH3fgwuzCH5S8UJGiWEs2h04kUh9fWfEaFds41c1Y=
 github.com/mostlygeek/arp v0.0.0-20170424181311-541a2129847a h1:AfneHvfmYgUIcgdUrrDFklLdEzQAvG9AKRTe1x1mx/0=
 github.com/mostlygeek/arp v0.0.0-20170424181311-541a2129847a/go.mod h1:jZxafo9CAqaKFQE4zitrg5QNlA6CXUsjwXPlIppF3tk=
-github.com/omeid/go-resources v0.0.0-20190324090249-46f4269d8abd h1:VxcHM9xpZ4BHxQPYWAavsxPciBZITxmnGNyIO7hsUfk=
-github.com/omeid/go-resources v0.0.0-20190324090249-46f4269d8abd/go.mod h1:SIESmZeFlCKsQZcd2NEiX8spNNmCWB1V/RbM/eBKDfo=
-github.com/omeid/go-resources v0.0.0-20200113210624-eb442c910d63 h1:sIbUgIyD239CwuHE023p6knQeCA/Yx3q1MfNxhlxuU8=
-github.com/omeid/go-resources v0.0.0-20200113210624-eb442c910d63/go.mod h1:z/Qlkuf0oJETCM1bXoga55K0aHbyfwGzYrJVELbU7ck=
+github.com/omeid/go-resources v0.0.0-20210530034755-0b8edd34167d h1:DSXrDt8TLgkdFadikgmZUajE2wzaKaIPGTWxIEGgr9Y=
+github.com/omeid/go-resources v0.0.0-20210530034755-0b8edd34167d/go.mod h1:z/Qlkuf0oJETCM1bXoga55K0aHbyfwGzYrJVELbU7ck=
 github.com/opencontainers/go-digest v1.0.0-rc1 h1:WzifXhOVOEOuFYOJAW6aQqW0TooG2iki3E3Ii+WN7gQ=
 github.com/opencontainers/go-digest v1.0.0-rc1/go.mod h1:cMLVZDEM3+U2I4VmLI6N8jQYUd2OVphdqWwCJHrFt2s=
 github.com/opencontainers/image-spec v1.0.1 h1:JMemWkRwHx4Zj+fVxWoMCFm/8sYGGrUVojFA6h/TRcI=
@@ -79,6 +81,7 @@ github.com/pelletier/go-toml v1.2.0 h1:T5zMGML61Wp+FlcbWjRDT7yAxhJNAiPPLOFECq181
 github.com/pelletier/go-toml v1.2.0/go.mod h1:5z9KED0ma1S8pY6P1sdut58dfprrGBbd/94hg7ilaic=
 github.com/pkg/errors v0.8.1 h1:iURUrRGxPUNPdy5/HRSm+Yj6okJ6UtLINN0Q9M4+h3I=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
+github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/sirupsen/logrus v1.3.0 h1:hI/7Q+DtNZ2kINb6qt/lS+IyXnHQe9e90POfeewL/ME=
 github.com/sirupsen/logrus v1.3.0/go.mod h1:LxeOpSwHxABJmUn/MG1IvRgCAasNZTLOkJPxbbu5VWo=
@@ -95,6 +98,7 @@ github.com/spf13/viper v1.3.1/go.mod h1:ZiWeW+zYFKm7srdB9IoDzzZXaJaI5eL9QjNiN/DM
 github.com/spf13/viper v1.3.2 h1:VUFqw5KcqRf7i70GOzW7N+Q7+gxVBkSSqiXB12+JQ4M=
 github.com/spf13/viper v1.3.2/go.mod h1:ZiWeW+zYFKm7srdB9IoDzzZXaJaI5eL9QjNiN/DMA2s=
 github.com/stretchr/objx v0.1.1/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
+github.com/stretchr/testify v1.2.2 h1:bSDNvY7ZPG5RlJ8otE/7V6gMiyenm9RtJ7IUVIAoJ1w=
 github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
 github.com/tebeka/strftime v0.0.0-20140926081919-3f9c7761e312 h1:frNEkk4P8mq+47LAMvj9LvhDq01kFDUhpJZzzei8IuM=
 github.com/tebeka/strftime v0.0.0-20140926081919-3f9c7761e312/go.mod h1:o6CrSUtupq/A5hylbvAsdydn0d5yokJExs8VVdx4wwI=
