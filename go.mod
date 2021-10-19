@@ -2,10 +2,9 @@ module github.com/netkoth/scoringengine
 
 require (
 	github.com/BurntSushi/toml v0.3.1 // indirect
-	github.com/Microsoft/hcsshim v0.8.20 // indirect
 	github.com/brimstone/go-vboxmanage v0.0.0-20210619180312-c9c7ecccaa7c
 	github.com/brimstone/traefik-cert v0.0.0-20190527220558-8012afa69771 // indirect
-	github.com/containerd/containerd v1.5.5 // indirect
+	github.com/containerd/containerd v1.5.7 // indirect
 	github.com/dave/jennifer v1.4.1 // indirect
 	github.com/docker/docker v20.10.8+incompatible // indirect
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a // indirect
