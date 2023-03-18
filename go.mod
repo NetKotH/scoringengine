@@ -2,6 +2,8 @@ module github.com/netkoth/scoringengine
 
 require (
 	github.com/brimstone/go-vboxmanage v0.0.0-20210619180312-c9c7ecccaa7c
+	github.com/brimstone/traefik-cert v0.0.0-20221122190140-8de781a3275c // indirect
+	github.com/dave/jennifer v1.6.0 // indirect
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a // indirect
 	github.com/fsouza/go-dockerclient v1.9.6
 	github.com/krolaw/dhcp4 v0.0.0-20190909130307-a50d88189771
@@ -9,6 +11,7 @@ require (
 	github.com/lestrrat-go/strftime v1.0.5 // indirect
 	github.com/miekg/dns v1.1.52
 	github.com/mostlygeek/arp v0.0.0-20170424181311-541a2129847a
+	github.com/omeid/go-resources v0.0.0-20221019081529-8e53f3c874c5 // indirect
 	github.com/spf13/viper v1.15.0
 	golang.org/x/net v0.7.0 // indirect
 )
