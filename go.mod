@@ -10,8 +10,7 @@ require (
 	github.com/miekg/dns v1.1.54
 	github.com/mostlygeek/arp v0.0.0-20170424181311-541a2129847a
 	github.com/sirupsen/logrus v1.9.0 // indirect
-	github.com/spf13/viper v1.15.0
-	golang.org/x/net v0.7.0 // indirect
+	github.com/spf13/viper v1.16.0
 )
 
 go 1.13
