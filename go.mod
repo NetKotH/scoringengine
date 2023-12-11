@@ -9,7 +9,7 @@ require (
 	github.com/lestrrat-go/strftime v1.0.5 // indirect
 	github.com/miekg/dns v1.1.57
 	github.com/mostlygeek/arp v0.0.0-20170424181311-541a2129847a
-	github.com/spf13/viper v1.17.0
+	github.com/spf13/viper v1.18.1
 )
 
 go 1.13
