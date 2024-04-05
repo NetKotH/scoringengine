@@ -1,11 +1,10 @@
+// +build !generate
 package main
-
-// Unused for now
-//go:generate go get -v github.com/omeid/go-resources/cmd/resources
-//go:generate resources -output=embed.go -var=Assets -tag=embed -trim=static/ static/*
 
 import (
 	"crypto/tls"
+	"encoding/json"
+	"fmt"
 	"log"
 	"net"
 	"net/http"
@@ -154,8 +153,21 @@ func main() {
 	}
 	logger.Printf("bridgeIP: %s\n", bridgeIP)
 
+	leases := make(map[string]lease)
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", handleRootRedirect)
+	mux.HandleFunc("/debug", func(w http.ResponseWriter, r *http.Request) {
+		jsonString, err := json.MarshalIndent(map[string]interface{}{
+			"leases":  leases,
+			"victims": victims,
+		}, "", "    ")
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+
+		fmt.Fprintf(w, string(jsonString))
+	})
 	srv := &http.Server{
 		Addr:           ":80",
 		Handler:        l.Wrap(mux, os.Stderr),
@@ -165,12 +177,11 @@ func main() {
 	}
 
 	scoreinterval, err = time.ParseDuration(viper.GetString("scoreinterval"))
-	leases := make(map[string]lease)
 	dhcphandler := &DHCPHandler{
 		ip:            bridgeIP,
 		leaseDuration: scoreinterval,
 		start:         bridgeIP,
-		leaseRange:    50, // TODO figure out how to make this a touch more dynamic.
+		leaseRange:    49, // TODO figure out how to make this a touch more dynamic.
 		leases:        leases,
 		options: dhcp.Options{
 			dhcp.OptionSubnetMask:       []byte{255, 255, 255, 0},
@@ -223,7 +234,7 @@ func main() {
 	// Setup dns server
 	go func() {
 		logger.Println("Starting dns service")
-		srv := &dns.Server{Addr: ":53", Net: "udp"}
+		srv := &dns.Server{Addr: bridgeIP.To4().String() + ":53", Net: "udp"}
 		srv.Handler = &dnshandler{}
 		if err := srv.ListenAndServe(); err != nil {
 			logger.Fatalf("Failed to set udp listener %s\n", err.Error())

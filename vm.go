@@ -115,8 +115,11 @@ func refreshVMs() {
 					flag = true
 					// First check the ARP table.
 					for i, m := range arp.Table() {
+						if m == "00:00:00:00:00:00" {
+							continue
+						}
 						if i == freeIP.String() && strings.ToLower(m) != strings.ToLower(mac) {
-							fmt.Println("Found ip in arp table")
+							fmt.Println("Found ip in arp table", m)
 							freeIP[3]++
 							flag = true
 							break

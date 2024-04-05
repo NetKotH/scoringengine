@@ -1,2 +1,2 @@
 ScoreInterval: 1m
-Bridge: docker0
+Bridge: vboxnet1

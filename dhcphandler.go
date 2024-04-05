@@ -12,8 +12,8 @@ import (
 )
 
 type lease struct {
-	nic    string
-	expiry time.Time // When the lease expires
+	NIC    string
+	Expiry time.Time // When the lease expires
 }
 
 type DHCPHandler struct {
@@ -45,6 +45,7 @@ func (h *DHCPHandler) ServeDHCP(p dhcp.Packet, msgType dhcp.MessageType, options
 	switch msgType {
 
 	case dhcp.Discover:
+		logger.Printf("Got Discover to %#v\n", h.ip.String())
 		if vip != nil {
 			return dhcp.ReplyPacket(
 				p,
@@ -65,8 +66,8 @@ func (h *DHCPHandler) ServeDHCP(p dhcp.Packet, msgType dhcp.MessageType, options
 		//return nil
 		logger.Printf("Returning an IP: %s\n", ip)
 		h.leases[ip.String()] = lease{
-			nic:    nic,
-			expiry: time.Now().Add(h.leaseDuration),
+			NIC:    nic,
+			Expiry: time.Now().Add(h.leaseDuration),
 		}
 		return dhcp.ReplyPacket(
 			p,
@@ -78,9 +79,8 @@ func (h *DHCPHandler) ServeDHCP(p dhcp.Packet, msgType dhcp.MessageType, options
 		)
 
 	case dhcp.Request:
-		logger.Printf("Got Request to %#v\n", h.ip)
 		if server, ok := options[dhcp.OptionServerIdentifier]; ok && !net.IP(server).Equal(h.ip) {
-			logger.Println("Message not for this server")
+			logger.Println("Request for IP not for this server")
 			return nil // Message not for this dhcp server
 		}
 		/*
@@ -93,7 +93,6 @@ func (h *DHCPHandler) ServeDHCP(p dhcp.Packet, msgType dhcp.MessageType, options
 		*/
 		reqIP := net.IP(options[dhcp.OptionRequestedIPAddress])
 		if reqIP == nil {
-			logger.Println("Using CIAddr")
 			reqIP = net.IP(p.CIAddr())
 		}
 		// If This is one of our victims
@@ -102,7 +101,7 @@ func (h *DHCPHandler) ServeDHCP(p dhcp.Packet, msgType dhcp.MessageType, options
 			return dhcp.ReplyPacket(p, dhcp.ACK, h.ip, reqIP, h.leaseDuration,
 				h.options.SelectOrderOrAll(options[dhcp.OptionParameterRequestList]))
 		}
-		logger.Println("not a victim")
+		logger.Println("This is not a victim")
 
 		if len(reqIP) != 4 {
 			logger.Printf("IP isn't ipv4 %d %s\n", len(reqIP), reqIP)
@@ -114,25 +113,32 @@ func (h *DHCPHandler) ServeDHCP(p dhcp.Packet, msgType dhcp.MessageType, options
 			// maybe ? return dhcp.ReplyPacket(p, dhcp.NAK, h.ip, nil, 0, nil)
 			return nil
 		}
-		logger.Println("Reasonable IP request")
+		logger.Printf("Reasonable IP request for %s\n", reqIP)
 		leaseNum := dhcp.IPRange(h.start, reqIP) - 1
 		logger.Printf("leaseNum: %#v\n", leaseNum)
 		if leaseNum < 0 || leaseNum > h.leaseRange {
 			return nil
 		}
-		if _, exists := h.leases[reqIP.String()]; !exists {
+		l, exists := h.leases[reqIP.String()]
+		if !exists {
 			nic := p.CHAddr().String()
 			logger.Printf("New client %s = %s", nic, reqIP)
 			h.leases[reqIP.String()] = lease{
-				nic:    nic,
-				expiry: time.Now().Add(h.leaseDuration),
+				NIC:    nic,
+				Expiry: time.Now().Add(h.leaseDuration),
 			}
 			logger.Println("leases")
 			for nic, l := range h.leases {
 				logger.Printf("%s: %#v\n", nic, l)
 			}
 		} else {
-			logger.Printf("Found an existing lease: %#v\n", reqIP)
+			// TODO if the mac doesn't match up
+			if strings.ToLower(l.NIC) != strings.ToLower(p.CHAddr().String()) {
+				// TODO reject the request
+				logger.Printf("Rejecting request for %s from %s as it's current owned by %s\n", reqIP, p.CHAddr().String(), l.NIC)
+				return dhcp.ReplyPacket(p, dhcp.NAK, h.ip, nil, 0, nil)
+			}
+			l.Expiry = time.Now().Add(h.leaseDuration)
 		}
 		return dhcp.ReplyPacket(p, dhcp.ACK, h.ip, reqIP, h.leaseDuration,
 			h.options.SelectOrderOrAll(options[dhcp.OptionParameterRequestList]))
@@ -154,17 +160,18 @@ func (h *DHCPHandler) findFree(mac string) *net.IP {
 	logger := log.New(os.Stderr, "[dhcp] ", log.LstdFlags)
 	ip := dhcp.IPAdd(h.start, h.leaseRange)
 	startip := dhcp.IPAdd(h.start, len(victims))
-	logger.Printf("ip: %s\n", ip)
-	logger.Printf("startip: %s\n", startip)
+	logger.Printf("topip: %s startip: %s", ip, startip)
 	logger.Printf("leases:\n")
 	now := time.Now()
+	// First clean out any expired leases
 	for nic, l := range h.leases {
 		logger.Printf("%s: %#v\n", nic, l)
 		// Expired leases
-		if l.expiry.Before(now) {
+		if l.Expiry.Before(now) {
 			delete(h.leases, nic)
 		}
 	}
+	// Next check the arp table for this IP
 	for n, m := range arp.Table() {
 		// If we already have an entry in the arp table for the ip, return that
 		if strings.ToLower(m) == strings.ToLower(mac) {
@@ -180,6 +187,7 @@ func (h *DHCPHandler) findFree(mac string) *net.IP {
 				goto top
 			}
 		}
+		logger.Printf("Offering %s\n", &ip)
 		return &ip
 	}
 	logger.Println("Out of IPs!")
