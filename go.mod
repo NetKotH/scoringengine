@@ -3,7 +3,7 @@ module github.com/netkoth/scoringengine
 require (
 	github.com/brimstone/go-vboxmanage v0.0.0-20210619180312-c9c7ecccaa7c
 	github.com/brimstone/traefik-cert v0.0.0-20221122190140-8de781a3275c
-	github.com/dave/jennifer v1.7.0
+	github.com/dave/jennifer v1.7.1
 	github.com/fsouza/go-dockerclient v1.11.0
 	github.com/krolaw/dhcp4 v0.0.0-20190909130307-a50d88189771
 	github.com/lestrrat-go/apache-logformat v2.0.4+incompatible
