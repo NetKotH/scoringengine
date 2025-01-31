@@ -7,7 +7,7 @@ require (
 	github.com/fsouza/go-dockerclient v1.12.0
 	github.com/krolaw/dhcp4 v0.0.0-20190909130307-a50d88189771
 	github.com/lestrrat-go/apache-logformat v2.0.4+incompatible
-	github.com/miekg/dns v1.1.62
+	github.com/miekg/dns v1.1.63
 	github.com/mostlygeek/arp v0.0.0-20170424181311-541a2129847a
 	github.com/spf13/viper v1.19.0
 )
@@ -53,7 +53,7 @@ require (
 	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
 	golang.org/x/mod v0.18.0 // indirect
-	golang.org/x/net v0.27.0 // indirect
+	golang.org/x/net v0.31.0 // indirect
 	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/term v0.27.0 // indirect
