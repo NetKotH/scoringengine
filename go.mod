@@ -9,7 +9,7 @@ require (
 	github.com/lestrrat-go/apache-logformat v2.0.4+incompatible
 	github.com/miekg/dns v1.1.66
 	github.com/mostlygeek/arp v0.0.0-20170424181311-541a2129847a
-	github.com/spf13/viper v1.20.0
+	github.com/spf13/viper v1.20.1
 )
 
 require (
