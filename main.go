@@ -81,6 +81,55 @@ var teamRe *regexp.Regexp
 var bridgeIP net.IP
 var scoreinterval time.Duration
 
+func saveEvents() {
+	logger := log.New(os.Stderr, "[saveEvents] ", log.LstdFlags)
+	eventFile := "events.json"
+
+	data, err := json.MarshalIndent(Events, "", "  ")
+	if err != nil {
+		log.Printf("Failed to marshal events: %v", err)
+		return
+	}
+
+	err = os.WriteFile(eventFile, data, 0644)
+	if err != nil {
+		log.Printf("Failed to write events to file: %v", err)
+		return
+	}
+
+	logger.Printf("Saved %d events to %s", len(Events), eventFile)
+}
+
+func loadEvents() {
+	logger := log.New(os.Stderr, "[loadEvents] ", log.LstdFlags)
+	eventFile := "events.json"
+
+	_, err := os.Stat(eventFile)
+	if os.IsNotExist(err) {
+		// File doesn't exist, start with empty Events
+		logger.Println("events.json does not exist, starting with empty Events")
+		return
+	}
+	if err != nil {
+		logger.Printf("Failed to stat events.json: %v", err)
+		return
+	}
+
+	data, err := os.ReadFile(eventFile)
+	if err != nil {
+		logger.Printf("Failed to read events.json: %v", err)
+		return
+	}
+
+	err = json.Unmarshal(data, &Events)
+	if err != nil {
+		logger.Printf("Failed to unmarshal events from events.json: %v", err)
+		return
+	}
+
+	logger.Printf("Loaded %d events from %s", len(Events), eventFile)
+}
+
 func main() {
 	logger := log.New(os.Stderr, "[main] ", log.LstdFlags)
 
@@ -248,12 +297,15 @@ func main() {
 	time.Sleep(time.Second * 2)
 	logger.Println("Starting victim checks")
 	// Start target system checks in the foreground
+	loadEvents()
 	for {
 		logger.Println("top of check loop")
 		refreshVMs()
 		refreshContainers()
 		checkVictims()
 		// TODO make this a ticker instead
+		// save events to events.json
+		saveEvents()
 		time.Sleep(scoreinterval)
 	}
 }
